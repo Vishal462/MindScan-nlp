@@ -27,4 +27,4 @@ streamlit run project.py
 ## Research Paper
 The code in this repository implements the concepts and methods described in my research work.  
 For detailed explanations of the project’s design, methodology, and results, please refer to the full paper:  
-[Download MindScan Research Paper](docs/MindScan_Research_Paper.pdf)
+[Download MindScan Research Paper](https://github.com/Vishal462/MindScan-nlp/blob/main/docs/MindScan_Reserach_Paper.pdf)
