@@ -3,8 +3,21 @@ import pandas as pd
 import numpy as np
 import torch
 import torch.nn.functional as F
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
+from transformers import AutoModelForSequenceClassification, AutoTokenizer,  RobertaForSequenceClassification
 from peft import PeftModel
+
+import random
+def set_global_seed(seed_value=42):
+    random.seed(seed_value)
+    np.random.seed(seed_value)
+    torch.manual_seed(seed_value)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed_value)
+        # Recommended settings for determinism on GPUs (may slow down training, but fine for inference)
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
+
+set_global_seed(42)
 
 st.set_page_config(
     page_title="MindScan",
@@ -123,12 +136,14 @@ SENTIMENT_LABELS = {0: "Negative", 1: "Positive"}
 EMOTION_LABELS = {0:'Sadness', 1:'Joy',2:'Love',3:'Anger',4:'Fear',5:'Surprise'}
 
 @st.cache_resource
-def load_model_checkpoint(model_path, task_name, num_labels):
+def load_model_checkpoint(model_path, task_name, num_labels, model_class=None):
+    if model_class is None:
+        model_class = AutoModelForSequenceClassification
     tokenizer = AutoTokenizer.from_pretrained(model_path)
-    model = AutoModelForSequenceClassification.from_pretrained(
+    model = model_class.from_pretrained(
             model_path,
             num_labels=num_labels
-           )
+    )
     model.eval()
     return tokenizer, model
 
@@ -153,7 +168,8 @@ def load_lora_model(lora_path, base_id_or_path, task_name, num_labels):
 CONDITION_TOKENIZER, CONDITION_MODEL = load_model_checkpoint(
     model_path='./mental_health_status_roberta_model_assets',
     task_name="MENTAL HEALTH (RoBERTa)",
-    num_labels=len(CONDITION_LABELS)
+    num_labels=len(CONDITION_LABELS),
+    model_class=RobertaForSequenceClassification
 )
 
 # M2: SENTIMENT (DistilBERT - Standard Checkpoint)
@@ -174,6 +190,7 @@ EMOTION_TOKENIZER, EMOTION_MODEL = load_lora_model(
 def predict_model(text, tokenizer, model, labels):
     if model is None or tokenizer is None:
         return "MODEL ERROR", 0.0, np.array([])
+    text = text.lower().strip()
     inputs = tokenizer(text, truncation=True, padding=True, return_tensors="pt")
     with torch.no_grad():
         outputs = model(**inputs)
