@@ -49,7 +49,9 @@ streamlit run project.py
 ```
 ## Research Paper
 The code in this repository implements the concepts and methods described in my research work:
-**Hybrid Multi-Task NLP for Comprehensive Mental Health Assessment" by Vishal Agarwal.**
+
+**"Hybrid Multi-Task NLP for Comprehensive Mental Health Assessment" by Vishal Agarwal.**
+
 For detailed explanations of the project’s design, methodology, and results, please refer to the full paper:  
 [Download MindScan Research Paper](docs/MindScan_Reserach_Paper.pdf)
 
