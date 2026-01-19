@@ -36,7 +36,7 @@ The models demonstrate strong reliability across all evaluated tasks:
 
 ### 1. Clone the repository
 ```bash
-git clone [https://github.com/your-username/mindscan-nlp.git](https://github.com/your-username/mindscan-nlp.git)
+git clone https://github.com/your-username/mindscan-nlp.git
 cd mindscan-nlp
 ```
 ### 2. Install dependencies
